@@ -62,7 +62,7 @@ async def search_google_tool(params: SearchGoogleAction) -> str:
     title = await page.title()
     msg = f"🔍 Searched for '{params.query}' on page titled '{title}'"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("go_to_url", description="Navigate to a specified URL")
 async def go_to_url_tool(params: GoToUrlAction) -> str:
@@ -72,7 +72,7 @@ async def go_to_url_tool(params: GoToUrlAction) -> str:
     await page.wait_for_load_state()
     msg = f"🔗 Navigated to {params.url}"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("go_back", description="Navigate back in browser history")
 async def go_back_tool(params: NoParamsAction) -> str:
@@ -80,7 +80,7 @@ async def go_back_tool(params: NoParamsAction) -> str:
     await bc.go_back()
     msg = "🔙 Navigated back"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("wait", description="Wait for a specified number of seconds (default 3)")
 async def wait_tool(seconds: int = 3) -> str:
@@ -122,7 +122,7 @@ async def click_element_tool(params: ClickElementAction) -> str:
             logger.info(new_tab_msg)
             await bc.switch_to_tab(-1)
             msg += f" - {new_tab_msg}"
-        return msg + f"\nBrowser state: {bc.state}"
+        return msg + f"\nBrowser state: {await bc.get_state()}"
     except Exception as e:
         error_msg = f"Error clicking element {params.index}: {str(e)}"
         logger.warning(error_msg)
@@ -141,7 +141,7 @@ async def input_text_tool(params: InputTextAction) -> str:
     await bc._input_text_element_node(element_node, params.text)
     msg = f"⌨️ Input '{params.text}' into element at index {params.index}"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("switch_tab", description="Switch to a different browser tab by page ID")
 async def switch_tab_tool(params: SwitchTabAction) -> str:
@@ -151,7 +151,7 @@ async def switch_tab_tool(params: SwitchTabAction) -> str:
     await page.wait_for_load_state()
     msg = f"🔄 Switched to tab {params.page_id}"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("open_tab", description="Open a URL in a new browser tab")
 async def open_tab_tool(params: OpenTabAction) -> str:
@@ -159,7 +159,7 @@ async def open_tab_tool(params: OpenTabAction) -> str:
     await bc.create_new_tab(params.url)
     msg = f"🔗 Opened new tab with URL: {params.url}"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("extract_content", description="Extract page content based on a goal")
 async def extract_content_tool(params: ExtractPageContentAction) -> str:
@@ -169,7 +169,7 @@ async def extract_content_tool(params: ExtractPageContentAction) -> str:
     snippet = content[:100] + "..." if len(content) > 100 else content
     msg = f"📄 Extracted content for '{params.value}': {snippet}"
     logger.info(msg)
-    return msg + f"\nBrowser state: {bc.state}"
+    return msg + f"\nBrowser state: {await bc.get_state()}"
 
 @mcp.tool("scroll_down", description="Scroll down the page by a pixel amount or one page if not specified")
 async def scroll_down_tool(params: ScrollAction) -> str:
