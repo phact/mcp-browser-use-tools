@@ -6,7 +6,7 @@ import mcp_server.mcp_server as mcp_server
 @pytest.fixture(scope="module", autouse=True)
 def real_browser_context():
     # This will initialize the actual browser context used by your tools.
-    asyncio.run(mcp_server.initialize_browser_context())
+    asyncio.run(mcp_server.initialize_browser_context(headless=True))
     # Optionally, yield and later add any cleanup if your Browser has a shutdown method.
     yield
 

@@ -5,16 +5,17 @@ from fastmcp import FastMCP
 
 from browser_use.browser.context import BrowserContext, BrowserContextConfig
 from browser_use.controller.views import *
-from browser_use.browser.browser import Browser
+from browser_use.browser.browser import Browser, BrowserConfig
 
 _browser_ctx: Optional[BrowserContext] = None
 
 async def initialize_browser_context(headless: bool = False):
     global _browser_ctx
     if _browser_ctx is None:
-        browser = Browser()
+        config = BrowserConfig(headless=headless)
+        browser = Browser(config=config)
         # Set no_viewport=True if headless is True
-        _browser_ctx = BrowserContext(browser, BrowserContextConfig(no_viewport=headless))
+        _browser_ctx = BrowserContext(browser, BrowserContextConfig())
 
 def get_browser_context() -> BrowserContext:
     global _browser_ctx
